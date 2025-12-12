@@ -1,0 +1,26 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Bitcoin vs Gold - Market Cap Comparison",
+  description:
+    "Compare the market capitalization of Bitcoin and Gold with daily updated data and visual charts.",
+  keywords: ["Bitcoin", "Gold", "Market Cap", "Cryptocurrency", "Investment"],
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={`${inter.className} bg-background text-white min-h-screen`}>
+        {children}
+      </body>
+    </html>
+  );
+}
