@@ -8,10 +8,14 @@ export const COINGECKO_API_URL =
 
 // Colors for UI
 export const COLORS = {
-  bitcoin: "#F7931A",
-  gold: "#FFD700",
+  bitcoin: "#FF9500",
+  bitcoinLight: "#2D1F0A",
+  gold: "#FFC107",
+  goldLight: "#2D2509",
   background: "#0A0A0A",
   card: "#1A1A1A",
   text: "#FFFFFF",
   textSecondary: "#A0A0A0",
+  border: "#2A2A2A",
+  shadow: "rgba(0, 0, 0, 0.3)",
 };

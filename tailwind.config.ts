@@ -9,8 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bitcoin: "#F7931A",
-        gold: "#FFD700",
+        bitcoin: "#FF9500",
+        bitcoinLight: "#2D1F0A",
+        gold: "#FFC107",
+        goldLight: "#2D2509",
         background: "#0A0A0A",
         card: "#1A1A1A",
         textSecondary: "#A0A0A0",

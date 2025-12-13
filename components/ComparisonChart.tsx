@@ -1,16 +1,7 @@
 "use client";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-import { calculatePercentage } from "@/lib/utils";
 import { COLORS } from "@/lib/constants";
+import Image from "next/image";
 
 interface ComparisonChartProps {
   bitcoinMarketCap: number;
@@ -22,82 +13,62 @@ export default function ComparisonChart({
   goldMarketCap,
 }: ComparisonChartProps) {
   const total = bitcoinMarketCap + goldMarketCap;
-
-  const data = [
-    {
-      name: "Bitcoin",
-      value: bitcoinMarketCap,
-      percentage: calculatePercentage(bitcoinMarketCap, total),
-      color: COLORS.bitcoin,
-    },
-    {
-      name: "Gold",
-      value: goldMarketCap,
-      percentage: calculatePercentage(goldMarketCap, total),
-      color: COLORS.gold,
-    },
-  ];
-
-  const formatValue = (value: number) => {
-    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`;
-    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
-    return `$${value}`;
-  };
+  const btcPercentage = (bitcoinMarketCap / total) * 100;
+  const goldPercentage = (goldMarketCap / total) * 100;
 
   return (
-    <div className="bg-card rounded-lg p-6 md:p-8 shadow-xl border border-gray-800">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-        Market Cap Comparison
+    <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-xl border-2 border-purple-500/30">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent">
+        📊 Market Cap Comparison
       </h2>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} layout="vertical" margin={{ left: 20, right: 20 }}>
-          <XAxis type="number" hide />
-          <YAxis
-            type="category"
-            dataKey="name"
-            tick={{ fill: "#FFFFFF", fontSize: 14 }}
-            width={80}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#1A1A1A",
-              border: "1px solid #333",
-              borderRadius: "8px",
-              color: "#FFFFFF",
-            }}
-            formatter={(value: number) => formatValue(value)}
-            labelStyle={{ color: "#A0A0A0" }}
-          />
-          <Bar dataKey="value" radius={[0, 8, 8, 0]}>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      {/* Horizontal Bar */}
+      <div className="relative h-16 md:h-20 flex rounded-2xl overflow-hidden shadow-lg border-2 border-gray-700">
+        {/* Bitcoin Section */}
+        <div
+          className="transition-all duration-500 relative group"
+          style={{
+            width: `${btcPercentage}%`,
+            backgroundColor: COLORS.bitcoin,
+          }}
+        >
+          {/* Hover effect */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all" />
+        </div>
 
-      <div className="mt-6 space-y-3">
-        {data.map((item) => (
-          <div
-            key={item.name}
-            className="flex items-center justify-between py-2 px-4 bg-background rounded-lg"
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="font-semibold">{item.name}</span>
-            </div>
-            <div className="text-right">
-              <p className="font-bold" style={{ color: item.color }}>
-                {formatValue(item.value)}
-              </p>
-              <p className="text-sm text-textSecondary">{item.percentage}</p>
-            </div>
-          </div>
-        ))}
+        {/* Gold Section */}
+        <div
+          className="transition-all duration-500 relative group"
+          style={{
+            width: `${goldPercentage}%`,
+            backgroundColor: COLORS.gold,
+          }}
+        >
+          {/* Hover effect */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all" />
+        </div>
+      </div>
+
+      {/* Percentage Labels Below */}
+      <div className="flex justify-between mt-6">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">₿</span>
+          <span className="font-bold text-lg md:text-xl" style={{ color: COLORS.bitcoin }}>
+            {btcPercentage.toFixed(1)}%
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-lg md:text-xl" style={{ color: COLORS.gold }}>
+            {goldPercentage.toFixed(1)}%
+          </span>
+          <Image
+            src="/gold-bars.png"
+            alt="Gold"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
+        </div>
       </div>
     </div>
   );

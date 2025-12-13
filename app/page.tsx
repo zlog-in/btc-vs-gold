@@ -5,6 +5,7 @@ import { COLORS, GOLD_SUPPLY_TROY_OUNCES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { fetchBitcoinData, fetchGoldData } from "@/lib/api";
 import { ApiResponse } from "@/types";
+import Image from "next/image";
 
 // Enable ISR with 24-hour revalidation
 export const revalidate = 86400; // 24 hours in seconds
@@ -73,11 +74,28 @@ export default async function Home() {
         />
       </div>
 
-      <footer className="text-center text-textSecondary text-sm py-6">
-        <p>Last updated: {formatDate(data.lastUpdated)}</p>
-        <p className="mt-2">
-          Data sources: CoinGecko (Bitcoin) & Metals API (Gold)
-        </p>
+      <footer className="text-center py-8 mt-8">
+        <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 border-2 border-indigo-500/30 shadow-lg max-w-2xl mx-auto">
+          <p className="text-gray-200 font-medium mb-3 flex items-center justify-center gap-2">
+            🕒 Last updated: {formatDate(data.lastUpdated)}
+          </p>
+          <p className="text-gray-300 text-sm flex items-center justify-center gap-2 flex-wrap">
+            📡 Data sources: CoinGecko (Bitcoin ₿) & Metals API (Gold{" "}
+            <Image
+              src="/gold-bars.png"
+              alt="Gold"
+              width={16}
+              height={16}
+              className="w-4 h-4 inline-block"
+            />
+            )
+          </p>
+          <div className="mt-4 pt-4 border-t border-gray-700">
+            <p className="text-gray-400 text-xs">
+              💎 Built with Next.js • ⚡ Real-time market data • 📊 Live charts
+            </p>
+          </div>
+        </div>
       </footer>
     </main>
   );
