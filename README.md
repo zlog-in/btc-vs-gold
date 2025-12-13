@@ -2,6 +2,11 @@
 
 A modern, minimal website that compares the market capitalization of Bitcoin and Gold with daily updated data and visual charts.
 
+## Demo
+Check out the live demo: [https://btc-vs-gold.vercel.app](https://btc-vs-gold.vercel.app)
+
+![Screenshot](./public/webpage.png)
+
 ## Features
 
 - Real-time market cap comparison between Bitcoin and Gold
