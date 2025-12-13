@@ -4,7 +4,13 @@ export default function Header() {
   return (
     <header className="text-center py-8 md:py-12">
       <div className="mb-4 flex items-center justify-center gap-4 md:gap-6">
-        <span className="text-6xl md:text-7xl">₿</span>
+        <Image
+          src="/bitcoin.png"
+          alt="Bitcoin"
+          width={80}
+          height={80}
+          className="w-16 h-16 md:w-20 md:h-20"
+        />
         <span className="text-4xl md:text-5xl">🆚</span>
         <Image
           src="/gold-bars.png"

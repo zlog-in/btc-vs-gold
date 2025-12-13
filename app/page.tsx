@@ -80,7 +80,15 @@ export default async function Home() {
             🕒 Last updated: {formatDate(data.lastUpdated)}
           </p>
           <p className="text-gray-300 text-sm flex items-center justify-center gap-2 flex-wrap">
-            📡 Data sources: CoinGecko (Bitcoin ₿) & Metals API (Gold{" "}
+            📡 Data sources: CoinGecko (Bitcoin{" "}
+            <Image
+              src="/bitcoin.png"
+              alt="Bitcoin"
+              width={16}
+              height={16}
+              className="w-4 h-4 inline-block"
+            />
+            ) & Metals API (Gold{" "}
             <Image
               src="/gold-bars.png"
               alt="Gold"

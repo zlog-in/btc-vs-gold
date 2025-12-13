@@ -29,7 +29,13 @@ export default function MarketCapCard({
     >
       <div className="flex items-center gap-3 mb-6">
         {symbol === "BTC" ? (
-          <div className="text-5xl">₿</div>
+          <Image
+            src="/bitcoin.png"
+            alt="Bitcoin"
+            width={56}
+            height={56}
+            className="w-14 h-14"
+          />
         ) : (
           <Image
             src="/gold-bars.png"

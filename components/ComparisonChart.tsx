@@ -52,7 +52,13 @@ export default function ComparisonChart({
       {/* Percentage Labels Below */}
       <div className="flex justify-between mt-6">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">₿</span>
+          <Image
+            src="/bitcoin.png"
+            alt="Bitcoin"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
           <span className="font-bold text-lg md:text-xl" style={{ color: COLORS.bitcoin }}>
             {btcPercentage.toFixed(1)}%
           </span>
