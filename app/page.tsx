@@ -1,23 +1,36 @@
 import Header from "@/components/Header";
 import MarketCapCard from "@/components/MarketCapCard";
 import ComparisonChart from "@/components/ComparisonChart";
-import { COLORS } from "@/lib/constants";
+import { COLORS, GOLD_SUPPLY_TROY_OUNCES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import { fetchBitcoinData, fetchGoldData } from "@/lib/api";
 import { ApiResponse } from "@/types";
 
+// Enable ISR with 24-hour revalidation
+export const revalidate = 86400; // 24 hours in seconds
+
 async function getMarketData(): Promise<ApiResponse> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   try {
-    const response = await fetch(`${baseUrl}/api/market-data`, {
-      next: { revalidate: 86400 }, // Revalidate every 24 hours
-    });
+    // Fetch both Bitcoin and Gold data in parallel
+    const [btcData, goldData] = await Promise.all([
+      fetchBitcoinData(),
+      fetchGoldData(),
+    ]);
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch market data");
-    }
+    // Calculate gold market cap
+    const goldMarketCap = goldData.price * GOLD_SUPPLY_TROY_OUNCES;
 
-    return response.json();
+    return {
+      bitcoin: {
+        price: btcData.usd,
+        marketCap: btcData.usd_market_cap,
+      },
+      gold: {
+        price: goldData.price,
+        marketCap: goldMarketCap,
+      },
+      lastUpdated: new Date().toISOString(),
+    };
   } catch (error) {
     console.error("Error fetching market data:", error);
     // Return fallback data

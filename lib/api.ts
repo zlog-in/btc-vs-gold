@@ -11,9 +11,7 @@ import { COINGECKO_API_URL } from "./constants";
  */
 export async function fetchBitcoinData(): Promise<BitcoinData> {
   try {
-    const response = await fetch(COINGECKO_API_URL, {
-      next: { revalidate: 86400 }, // Cache for 24 hours
-    });
+    const response = await fetch(COINGECKO_API_URL);
 
     if (!response.ok) {
       throw new Error(
@@ -52,7 +50,6 @@ export async function fetchGoldData(): Promise<GoldData> {
         headers: {
           "x-access-token": "goldapi-demo", // Demo token, no signup needed
         },
-        next: { revalidate: 86400 }, // Cache for 24 hours
       }
     );
 
@@ -65,10 +62,7 @@ export async function fetchGoldData(): Promise<GoldData> {
 
     // Fallback: Try alternative free API
     const fallbackResponse = await fetch(
-      "https://data-asg.goldprice.org/dbXRates/USD",
-      {
-        next: { revalidate: 86400 },
-      }
+      "https://data-asg.goldprice.org/dbXRates/USD"
     );
 
     if (fallbackResponse.ok) {
