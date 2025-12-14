@@ -58,7 +58,7 @@ export default function BlockchainStats({ stats }: BlockchainStatsProps) {
         {/* Time Since Genesis */}
         <div className="bg-black/30 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/10">
           <p className="text-gray-300 text-xs md:text-sm mb-1 md:mb-2">
-            ⏰ Since Genesis
+            🗓️ Since Genesis
           </p>
           <p className="text-lg md:text-xl font-bold text-orange-400 break-words">
             {stats.timeSinceGenesis.years}y {stats.timeSinceGenesis.months}m{" "}
