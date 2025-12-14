@@ -10,9 +10,9 @@ Check out the live demo: [https://btc-vs-gold.vercel.app](https://btc-vs-gold.ve
 ## Features
 
 - Real-time market cap comparison between Bitcoin and Gold
-- Daily automatic updates using Next.js ISR (Incremental Static Regeneration)
-- Interactive visual charts powered by Recharts
-- Minimal, clean design with dark theme
+- **Manual refresh button** - click the 🆚 icon to fetch fresh data instantly
+- Interactive visual charts with custom icons
+- Modern dark theme with colorful gradient backgrounds
 - Fully responsive (mobile, tablet, desktop)
 - **No API keys required** - works out of the box!
 - Zero hosting cost on Vercel free tier
@@ -86,18 +86,19 @@ All APIs used are free and public, so you can start using the app immediately wi
 
 ### Data Fetching Strategy
 
-The app uses **Incremental Static Regeneration (ISR)** to update data once every 24 hours:
+The app uses **client-side data fetching** with a manual refresh button:
 
-1. On the first request, Next.js fetches data from APIs
-2. The page is pre-rendered and cached
-3. For the next 24 hours, visitors see the cached version (instant load)
-4. After 24 hours, Next.js revalidates the data in the background
-5. New visitors get the updated data
+1. On page load, the app fetches initial data from the `/api/refresh` endpoint
+2. Data is displayed with Bitcoin and Gold market information
+3. Click the 🆚 button to fetch fresh data on-demand
+4. The button changes to ⏳ while loading
+5. All data updates instantly when the request completes
 
 This approach:
-- Keeps API calls minimal (stays within free tier limits)
-- Provides fast page loads
-- Ensures data is fresh (updated daily)
+- Gives you control over when to fetch fresh data
+- Provides instant updates when you need them
+- Stays within free tier limits (no automatic polling)
+- Shows real-time data whenever you refresh
 
 ### Market Cap Calculation
 
@@ -116,22 +117,27 @@ Gold Market Cap = Current Gold Price × Total Above-Ground Supply
 ```
 btc-vs-gold/
 ├── app/
-│   ├── api/market-data/
-│   │   └── route.ts          # API route with ISR caching
+│   ├── api/
+│   │   └── refresh/
+│   │       └── route.ts       # Manual refresh API endpoint
 │   ├── layout.tsx             # Root layout
-│   ├── page.tsx               # Main page
+│   ├── page.tsx               # Main page (client component)
 │   └── globals.css            # Global styles
 ├── components/
-│   ├── Header.tsx             # Page header
+│   ├── Header.tsx             # Page header with refresh button
 │   ├── MarketCapCard.tsx      # Market cap display card
-│   └── ComparisonChart.tsx    # Bar chart visualization
+│   └── ComparisonChart.tsx    # Horizontal bar chart
 ├── lib/
 │   ├── api.ts                 # API fetching functions
 │   ├── constants.ts           # Constants (gold supply, colors)
 │   └── utils.ts               # Utility functions
 ├── types/
 │   └── index.ts               # TypeScript type definitions
-└── public/                    # Static assets
+├── public/
+│   ├── bitcoin.png            # Bitcoin icon
+│   ├── gold-bars.png          # Gold icon
+│   └── webpage.png            # Screenshot
+└── .env.example               # Environment variables template
 ```
 
 ## Deployment
@@ -146,13 +152,23 @@ btc-vs-gold/
 
 4. Click "Deploy"
 
-That's it! No environment variables or API keys needed.
+That's it! No environment variables or configuration needed.
 
 Your site will be live in seconds with:
 - Automatic HTTPS
 - Global CDN
 - Automatic redeployment on git push
-- Zero configuration required
+- **Manual refresh button** - click 🆚 to get fresh data anytime
+
+### How Data Refresh Works
+
+The project features a manual refresh button for on-demand data updates:
+
+- **Refresh button**: Click the 🆚 icon in the header
+- **What it does**: Fetches fresh Bitcoin and Gold data from the APIs
+- **Visual feedback**: Shows ⏳ while loading, then returns to 🆚
+- **Instant updates**: All market data refreshes immediately
+- **Cost**: Free on Vercel - no limits on refresh requests
 
 ### Deploy to GitHub Pages
 
@@ -193,22 +209,24 @@ colors: {
 }
 ```
 
-### Adjusting Update Frequency
+### Customizing the Refresh Button
 
-Edit `app/api/market-data/route.ts`:
+Edit `components/Header.tsx` to change the button appearance:
 
-```ts
-export const revalidate = 86400; // Change to desired seconds (86400 = 24 hours)
+```tsx
+// Change the emoji when refreshing
+{isRefreshing ? "⏳" : "🆚"}
+
+// Or customize the hover effect
+className="hover:scale-110 active:scale-95 transition-transform"
 ```
-
-Note: More frequent updates will increase API usage.
 
 ## Performance
 
 - **Lighthouse Score**: 95+ Performance
 - **First Load**: < 2 seconds
 - **Bundle Size**: < 200KB
-- **API Calls**: ~30/month (well within free tiers)
+- **API Calls**: Based on usage (free tiers are very generous)
 
 ## Cost Analysis
 
@@ -216,10 +234,12 @@ Note: More frequent updates will increase API usage.
 
 | Service | Plan | Cost | Usage | Auth Required |
 |---------|------|------|-------|---------------|
-| CoinGecko API | Free | $0 | ~30 calls/month | No |
+| CoinGecko API | Free | $0 | On-demand (manual refresh) | No |
 | GoldAPI.io | Demo | $0 | Unlimited | No (demo token) |
-| GoldPrice.org | Free | $0 | ~30 calls/month | No |
+| GoldPrice.org | Free | $0 | On-demand (manual refresh) | No |
 | Vercel Hosting | Hobby | $0 | Unlimited | No |
+
+Note: API calls only happen when you click the refresh button, keeping usage minimal and well within free tier limits.
 
 ## Troubleshooting
 
