@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchBitcoinData, fetchGoldData } from "@/lib/api";
+import { fetchBitcoinData, fetchGoldData, fetchBlockchainStats } from "@/lib/api";
 import { GOLD_SUPPLY_TROY_OUNCES } from "@/lib/constants";
 
 /**
@@ -8,16 +8,18 @@ import { GOLD_SUPPLY_TROY_OUNCES } from "@/lib/constants";
  */
 export async function GET() {
   try {
-    console.log("Fetching Bitcoin and Gold data...");
+    console.log("Fetching Bitcoin, Gold, and blockchain data...");
 
-    // Fetch both Bitcoin and Gold data in parallel
-    const [btcData, goldData] = await Promise.all([
+    // Fetch all data in parallel
+    const [btcData, goldData, blockchainStats] = await Promise.all([
       fetchBitcoinData(),
       fetchGoldData(),
+      fetchBlockchainStats(),
     ]);
 
     console.log("Bitcoin data:", btcData);
     console.log("Gold data:", goldData);
+    console.log("Blockchain stats:", blockchainStats);
 
     // Calculate gold market cap
     const goldMarketCap = goldData.price * GOLD_SUPPLY_TROY_OUNCES;
@@ -26,6 +28,7 @@ export async function GET() {
       bitcoin: {
         price: btcData.usd,
         marketCap: btcData.usd_market_cap,
+        blockchainStats: blockchainStats,
       },
       gold: {
         price: goldData.price,
@@ -35,7 +38,14 @@ export async function GET() {
     };
 
     console.log("Response:", response);
-    return NextResponse.json(response, { status: 200 });
+    return NextResponse.json(response, {
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error("Error fetching market data:", error);
     return NextResponse.json(

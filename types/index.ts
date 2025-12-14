@@ -15,10 +15,22 @@ export interface MarketCapData {
   color: string;
 }
 
+export interface BlockchainStats {
+  totalSupply: number;
+  blockHeight: number;
+  hashRate: number; // Hash rate in EH/s (exahashes per second)
+  timeSinceGenesis: {
+    years: number;
+    months: number;
+    days: number;
+  };
+}
+
 export interface ApiResponse {
   bitcoin: {
     price: number;
     marketCap: number;
+    blockchainStats?: BlockchainStats;
   };
   gold: {
     price: number;

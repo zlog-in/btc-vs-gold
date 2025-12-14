@@ -38,12 +38,6 @@ export default function Header({ onRefresh, isRefreshing }: HeaderProps) {
       <h1 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
         Bitcoin vs Gold
       </h1>
-      <p className="text-gray-300 text-lg md:text-xl font-medium">
-        💰 Market Capitalization Comparison 📊
-      </p>
-      <p className="text-gray-400 text-sm md:text-base mt-2">
-        Real-time data • Click 🆚 to refresh ⚡
-      </p>
     </header>
   );
 }

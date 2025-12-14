@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import MarketCapCard from "@/components/MarketCapCard";
 import ComparisonChart from "@/components/ComparisonChart";
+import BlockchainStats from "@/components/BlockchainStats";
 import { COLORS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { ApiResponse } from "@/types";
-import Image from "next/image";
 
 export default function Home() {
   const [data, setData] = useState<ApiResponse>({
@@ -26,11 +26,19 @@ export default function Home() {
   const fetchData = async () => {
     try {
       setIsRefreshing(true);
-      console.log("Fetching data from /api/refresh...");
-      const response = await fetch("/api/refresh");
+      console.log("Fetching all data from /api/refresh...");
+
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime();
+      const response = await fetch(`/api/refresh?t=${timestamp}`, {
+        cache: 'no-store',
+      });
+
       console.log("Response status:", response.status);
       const newData: ApiResponse = await response.json();
       console.log("Received data:", newData);
+      console.log("Bitcoin Stats:", newData.bitcoin.blockchainStats);
+
       setData(newData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -76,6 +84,11 @@ export default function Home() {
         />
       </div>
 
+      {/* Bitcoin Blockchain Statistics */}
+      <div className="mb-8">
+        <BlockchainStats stats={data.bitcoin.blockchainStats} />
+      </div>
+
       <div className="mb-8">
         <ComparisonChart
           bitcoinMarketCap={data.bitcoin.marketCap}
@@ -89,29 +102,8 @@ export default function Home() {
             🕒 Last updated: {formatDate(data.lastUpdated)}
           </p>
           <p className="text-gray-300 text-sm flex items-center justify-center gap-2 flex-wrap">
-            📡 Data sources: CoinGecko (Bitcoin{" "}
-            <Image
-              src="/bitcoin.png"
-              alt="Bitcoin"
-              width={16}
-              height={16}
-              className="w-4 h-4 inline-block"
-            />
-            ) & Metals API (Gold{" "}
-            <Image
-              src="/gold-bars.png"
-              alt="Gold"
-              width={16}
-              height={16}
-              className="w-4 h-4 inline-block"
-            />
-            )
+            📡 Data sources: CoinGecko • Mempool.space • Metals API
           </p>
-          <div className="mt-4 pt-4 border-t border-gray-700">
-            <p className="text-gray-400 text-xs">
-              💎 Built with Next.js • ⚡ Real-time market data • 📊 Live charts
-            </p>
-          </div>
         </div>
       </footer>
     </main>

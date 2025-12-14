@@ -2,8 +2,12 @@ import {
   BitcoinData,
   GoldData,
   CoinGeckoResponse,
+  BlockchainStats,
 } from "@/types";
 import { COINGECKO_API_URL } from "./constants";
+
+// Bitcoin genesis block timestamp: January 3, 2009 18:15:05 UTC
+const GENESIS_TIMESTAMP = new Date("2009-01-03T18:15:05Z").getTime();
 
 /**
  * Fetch Bitcoin price and market cap from CoinGecko API
@@ -32,6 +36,82 @@ export async function fetchBitcoinData(): Promise<BitcoinData> {
     return {
       usd: 0,
       usd_market_cap: 0,
+    };
+  }
+}
+
+/**
+ * Calculate time passed since Bitcoin genesis block
+ * @returns Years, months, and days since genesis
+ */
+function calculateTimeSinceGenesis(): { years: number; months: number; days: number } {
+  const now = Date.now();
+  const millisecondsSinceGenesis = now - GENESIS_TIMESTAMP;
+
+  // Convert to days
+  const totalDays = Math.floor(millisecondsSinceGenesis / (1000 * 60 * 60 * 24));
+
+  // Calculate years (approximate: 365.25 days per year)
+  const years = Math.floor(totalDays / 365.25);
+  const remainingDaysAfterYears = totalDays - Math.floor(years * 365.25);
+
+  // Calculate months (approximate: 30.44 days per month)
+  const months = Math.floor(remainingDaysAfterYears / 30.44);
+  const days = Math.floor(remainingDaysAfterYears - (months * 30.44));
+
+  return { years, months, days };
+}
+
+/**
+ * Fetch Bitcoin blockchain statistics from mempool.space API
+ * @returns Blockchain stats including supply, block height, and time since genesis
+ */
+export async function fetchBlockchainStats(): Promise<BlockchainStats> {
+  try {
+    // Fetch blockchain stats and hash rate from mempool.space in parallel
+    const [heightResponse, hashRateResponse] = await Promise.all([
+      fetch("https://mempool.space/api/v1/blocks/tip/height"),
+      fetch("https://mempool.space/api/v1/mining/hashrate/3d"),
+    ]);
+
+    if (!heightResponse.ok || !hashRateResponse.ok) {
+      throw new Error(`Mempool API error`);
+    }
+
+    const blockHeight = await heightResponse.json();
+    const hashRateData = await hashRateResponse.json();
+
+    // Calculate total supply (block subsidy halves every 210,000 blocks)
+    // Simplified calculation: each halving period
+    let totalSupply = 0;
+    let currentHeight = 0;
+    let subsidy = 50; // Initial block reward
+
+    while (currentHeight < blockHeight) {
+      const blocksInPeriod = Math.min(210000, blockHeight - currentHeight);
+      totalSupply += blocksInPeriod * subsidy;
+      currentHeight += blocksInPeriod;
+      subsidy /= 2;
+    }
+
+    // Convert hash rate to EH/s (exahashes per second)
+    // mempool.space returns hash rate in H/s
+    const hashRateEH = hashRateData.currentHashrate / 1e18;
+
+    return {
+      totalSupply: Math.floor(totalSupply),
+      blockHeight: blockHeight,
+      hashRate: hashRateEH,
+      timeSinceGenesis: calculateTimeSinceGenesis(),
+    };
+  } catch (error) {
+    console.error("Error fetching blockchain stats:", error);
+    // Return estimated values as fallback
+    return {
+      totalSupply: 19800000, // Approximate current supply
+      blockHeight: 870000, // Approximate current height
+      hashRate: 600, // Approximate current hash rate in EH/s
+      timeSinceGenesis: calculateTimeSinceGenesis(),
     };
   }
 }
