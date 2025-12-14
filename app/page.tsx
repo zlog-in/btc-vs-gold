@@ -99,10 +99,10 @@ export default function Home() {
       <footer className="text-center py-8 mt-8">
         <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 border-2 border-indigo-500/30 shadow-lg max-w-2xl mx-auto">
           <p className="text-gray-200 font-medium mb-3 flex items-center justify-center gap-2">
-            🕒 Last updated: {formatDate(data.lastUpdated)}
+            🕒 Updated: {formatDate(data.lastUpdated)}
           </p>
           <p className="text-gray-300 text-sm flex items-center justify-center gap-2 flex-wrap">
-            📡 Data sources: CoinGecko • Mempool.space • Metals API
+            📡 Sources: CoinGecko • Mempool.space • Metals API
           </p>
         </div>
       </footer>
