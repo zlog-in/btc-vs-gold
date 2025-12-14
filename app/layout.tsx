@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description:
     "Compare the market capitalization of Bitcoin and Gold with daily updated data and visual charts.",
   keywords: ["Bitcoin", "Gold", "Market Cap", "Cryptocurrency", "Investment"],
+  icons: {
+    icon: "/btclogo.png",
+  },
 };
 
 export default function RootLayout({
