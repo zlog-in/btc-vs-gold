@@ -35,9 +35,6 @@ export default function Header({ onRefresh, isRefreshing }: HeaderProps) {
           className="w-16 h-16 md:w-20 md:h-20"
         />
       </div>
-      <h1 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
-        Bitcoin vs Gold
-      </h1>
     </header>
   );
 }

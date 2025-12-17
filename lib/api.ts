@@ -94,14 +94,20 @@ export async function fetchBlockchainStats(): Promise<BlockchainStats> {
       subsidy /= 2;
     }
 
+    // Calculate current block reward based on number of halvings
+    const halvingPeriod = 210000;
+    const halvingCount = Math.floor(blockHeight / halvingPeriod);
+    const currentBlockReward = 50 / Math.pow(2, halvingCount);
+
     // Convert hash rate to EH/s (exahashes per second)
     // mempool.space returns hash rate in H/s
     const hashRateEH = hashRateData.currentHashrate / 1e18;
 
     return {
-      totalSupply: Math.floor(totalSupply),
+      totalSupply: totalSupply,
       blockHeight: blockHeight,
       hashRate: hashRateEH,
+      blockReward: currentBlockReward,
       timeSinceGenesis: calculateTimeSinceGenesis(),
     };
   } catch (error) {
@@ -111,6 +117,7 @@ export async function fetchBlockchainStats(): Promise<BlockchainStats> {
       totalSupply: 19800000, // Approximate current supply
       blockHeight: 870000, // Approximate current height
       hashRate: 600, // Approximate current hash rate in EH/s
+      blockReward: 3.125, // Current block reward after 4th halving
       timeSinceGenesis: calculateTimeSinceGenesis(),
     };
   }

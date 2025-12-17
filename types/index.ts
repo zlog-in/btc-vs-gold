@@ -19,6 +19,7 @@ export interface BlockchainStats {
   totalSupply: number;
   blockHeight: number;
   hashRate: number; // Hash rate in EH/s (exahashes per second)
+  blockReward: number; // Current block reward in BTC
   timeSinceGenesis: {
     years: number;
     months: number;

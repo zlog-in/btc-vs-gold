@@ -21,14 +21,17 @@ export default function BlockchainStats({ stats }: BlockchainStatsProps) {
         Bitcoin Stats
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
         {/* Total Supply */}
         <div className="bg-black/30 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/10">
           <p className="text-gray-300 text-xs md:text-sm mb-1 md:mb-2">
             💰 Total Supply
           </p>
           <p className="text-lg md:text-xl font-bold text-orange-400 break-words">
-            {stats.totalSupply.toLocaleString()}
+            {stats.totalSupply.toLocaleString(undefined, {
+              minimumFractionDigits: 3,
+              maximumFractionDigits: 3,
+            })}
           </p>
           <p className="text-xs text-gray-400 mt-1">BTC</p>
         </div>
@@ -42,6 +45,17 @@ export default function BlockchainStats({ stats }: BlockchainStatsProps) {
             {stats.blockHeight.toLocaleString()}
           </p>
           <p className="text-xs text-gray-400 mt-1">Latest</p>
+        </div>
+
+        {/* Block Reward */}
+        <div className="bg-black/30 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/10">
+          <p className="text-gray-300 text-xs md:text-sm mb-1 md:mb-2">
+            🎁 Block Reward
+          </p>
+          <p className="text-lg md:text-xl font-bold text-orange-400 break-words">
+            {stats.blockReward}
+          </p>
+          <p className="text-xs text-gray-400 mt-1">BTC</p>
         </div>
 
         {/* Hash Rate */}
