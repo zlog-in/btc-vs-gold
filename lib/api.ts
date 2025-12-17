@@ -159,36 +159,12 @@ export async function fetchBlockchainStats(btcPrice: number): Promise<Blockchain
 /**
  * Fetch gold price from free public API (no authentication required)
  * Uses GoldAPI.io free tier which doesn't require API key for basic requests
- * @returns Gold price per troy ounce with 24h change data
+ * @returns Gold price per troy ounce
  */
 export async function fetchGoldData(): Promise<GoldData> {
   try {
-    // Try GoldPrice.org first as it has better free tier
+    // Try free gold price API (no auth required)
     const response = await fetch(
-      "https://data-asg.goldprice.org/dbXRates/USD"
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      // GoldPrice.org returns current and previous prices
-      if (data.items && data.items.length > 0) {
-        const item = data.items[0];
-        const currentPrice = parseFloat(item.xauPrice);
-        const prevPrice = parseFloat(item.xauClose || item.xauPrice);
-
-        const change24h = currentPrice - prevPrice;
-        const changePct24h = ((currentPrice - prevPrice) / prevPrice) * 100;
-
-        return {
-          price: currentPrice,
-          change_24h: change24h,
-          change_pct_24h: changePct24h,
-        };
-      }
-    }
-
-    // Fallback: Try GoldAPI.io with demo token
-    const goldApiResponse = await fetch(
       "https://www.goldapi.io/api/XAU/USD",
       {
         headers: {
@@ -197,32 +173,40 @@ export async function fetchGoldData(): Promise<GoldData> {
       }
     );
 
-    if (goldApiResponse.ok) {
-      const goldApiData = await goldApiResponse.json();
-      if (goldApiData.price) {
+    if (response.ok) {
+      const data = await response.json();
+      if (data.price) {
         return {
-          price: goldApiData.price,
-          change_24h: goldApiData.ch || goldApiData.change || 0,
-          change_pct_24h: goldApiData.chp || goldApiData.change_percent || 0,
+          price: data.price,
+          change_24h: data.ch || 0,
+          change_pct_24h: data.chp || 0,
         };
+      }
+    }
+
+    // Fallback: Try alternative free API
+    const fallbackResponse = await fetch(
+      "https://data-asg.goldprice.org/dbXRates/USD"
+    );
+
+    if (fallbackResponse.ok) {
+      const fallbackData = await fallbackResponse.json();
+      // GoldPrice.org returns price per ounce in their items array
+      if (fallbackData.items && fallbackData.items.length > 0) {
+        const xauPrice = fallbackData.items[0].xauPrice;
+        if (xauPrice) {
+          return { price: parseFloat(xauPrice) };
+        }
       }
     }
 
     // If both APIs fail, use estimated current gold price
     console.warn("Gold APIs unavailable, using estimated price");
-    return {
-      price: 2650,
-      change_24h: 0,
-      change_pct_24h: 0,
-    };
+    return { price: 2650 };
   } catch (error) {
     console.error("Error fetching gold data:", error);
     // Return estimated gold price as fallback (~$2,650 per oz)
-    return {
-      price: 2650,
-      change_24h: 0,
-      change_pct_24h: 0,
-    };
+    return { price: 2650 };
   }
 }
 

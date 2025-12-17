@@ -28,7 +28,7 @@ export default function PricePerformance({
       </h3>
 
       <div className="grid grid-cols-2 gap-3">
-        {/* 24h Change % */}
+        {/* 24h Change */}
         <div className="bg-black/30 rounded-xl p-3 border border-white/10">
           <p className="text-gray-300 text-xs mb-1">24h Change</p>
           <p
@@ -39,24 +39,13 @@ export default function PricePerformance({
             {isPositive ? "+" : ""}
             {performance.changePct24h.toFixed(2)}%
           </p>
-          <p className="text-xs text-gray-400 mt-1">Percentage</p>
-        </div>
-
-        {/* 24h Change $ */}
-        <div className="bg-black/30 rounded-xl p-3 border border-white/10">
-          <p className="text-gray-300 text-xs mb-1">24h Change</p>
-          <p
-            className={`text-lg font-bold ${
-              isPositive ? "text-green-400" : "text-red-400"
-            }`}
-          >
-            {isPositive ? "+" : ""}$
+          <p className="text-xs text-gray-400 mt-1">
+            {isPositive ? "▲" : "▼"} $
             {Math.abs(performance.change24h).toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
           </p>
-          <p className="text-xs text-gray-400 mt-1">{isPositive ? "▲" : "▼"} USD</p>
         </div>
 
         {/* ATH for Bitcoin */}
@@ -74,7 +63,7 @@ export default function PricePerformance({
               </p>
             </div>
 
-            <div className="bg-black/30 rounded-xl p-3 border border-white/10">
+            <div className="bg-black/30 rounded-xl p-3 border border-white/10 col-span-2">
               <p className="text-gray-300 text-xs mb-1">Distance from ATH</p>
               <p
                 className={`text-lg font-bold ${
@@ -84,9 +73,6 @@ export default function PricePerformance({
                 }`}
               >
                 {performance.athDistancePct?.toFixed(2)}%
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                {performance.athDistancePct && performance.athDistancePct >= 0 ? "Above" : "Below"}
               </p>
             </div>
           </>
