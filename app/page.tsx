@@ -5,6 +5,16 @@ import Header from "@/components/Header";
 import MarketCapCard from "@/components/MarketCapCard";
 import ComparisonChart from "@/components/ComparisonChart";
 import BlockchainStats from "@/components/BlockchainStats";
+import PricePerformance from "@/components/PricePerformance";
+import HalvingCountdown from "@/components/HalvingCountdown";
+import LightningNetwork from "@/components/LightningNetwork";
+import NetworkActivity from "@/components/NetworkActivity";
+import MiningStats from "@/components/MiningStats";
+import GoldSupplyDemand from "@/components/GoldSupplyDemand";
+import ComparisonMetrics from "@/components/ComparisonMetrics";
+import PerformanceChart from "@/components/PerformanceChart";
+import HistoricalChart from "@/components/HistoricalChart";
+import VolatilityMetrics from "@/components/VolatilityMetrics";
 import { COLORS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { ApiResponse } from "@/types";
@@ -64,9 +74,10 @@ export default function Home() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl">
+    <main className="container mx-auto px-4 py-8 max-w-7xl">
       <Header onRefresh={handleRefresh} isRefreshing={isRefreshing} />
 
+      {/* Market Cap Cards */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <MarketCapCard
           name="Bitcoin"
@@ -84,16 +95,60 @@ export default function Home() {
         />
       </div>
 
-      {/* Bitcoin Blockchain Statistics */}
-      <div className="mb-8">
-        <BlockchainStats stats={data.bitcoin.blockchainStats} />
+      {/* Price Performance */}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <PricePerformance asset="bitcoin" performance={data.bitcoin.pricePerformance} />
+        <PricePerformance asset="gold" performance={data.gold.pricePerformance} />
       </div>
 
+      {/* Market Cap Comparison */}
       <div className="mb-8">
         <ComparisonChart
           bitcoinMarketCap={data.bitcoin.marketCap}
           goldMarketCap={data.gold.marketCap}
         />
+      </div>
+
+      {/* Comparison Metrics */}
+      <div className="mb-8">
+        <ComparisonMetrics comparison={data.comparison} />
+      </div>
+
+      {/* Bitcoin Blockchain Statistics */}
+      <div className="mb-8">
+        <BlockchainStats stats={data.bitcoin.blockchainStats} />
+      </div>
+
+      {/* Bitcoin Network Details */}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <NetworkActivity activity={data.bitcoin.blockchainStats?.networkActivity} />
+        <MiningStats miningStats={data.bitcoin.blockchainStats?.miningStats} />
+      </div>
+
+      {/* Lightning & Halving */}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <LightningNetwork lightning={data.bitcoin.blockchainStats?.lightningNetwork} />
+        <HalvingCountdown halvingInfo={data.bitcoin.blockchainStats?.halvingInfo} />
+      </div>
+
+      {/* Gold Supply & Demand */}
+      <div className="mb-8">
+        <GoldSupplyDemand supplyDemand={data.gold.supplyDemand} />
+      </div>
+
+      {/* Performance Comparison */}
+      <div className="mb-8">
+        <PerformanceChart performance={data.performanceComparison} />
+      </div>
+
+      {/* Historical Chart */}
+      <div className="mb-8">
+        <HistoricalChart historicalData={data.historicalData} />
+      </div>
+
+      {/* Volatility Metrics */}
+      <div className="mb-8">
+        <VolatilityMetrics volatility={data.volatilityMetrics} />
       </div>
 
       <footer className="text-center py-8 mt-8">
@@ -102,7 +157,7 @@ export default function Home() {
             🕒 Updated: {formatDate(data.lastUpdated)}
           </p>
           <p className="text-gray-300 text-sm flex items-center justify-center gap-2 flex-wrap">
-            📡 Sources: CoinGecko • Mempool.space • Metals API
+            📡 Sources: CoinGecko • Mempool.space • GoldAPI • 1ml.com
           </p>
         </div>
       </footer>
