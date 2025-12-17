@@ -11,7 +11,7 @@ export default function ComparisonMetrics({ comparison }: ComparisonMetricsProps
   return (
     <div className="bg-gradient-to-br from-indigo-950/30 to-purple-900/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-indigo-500/30">
       <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-        🔄 BTC vs Gold Ratios
+        🥊 BTC vs Gold Ratios
       </h3>
 
       <div className="grid md:grid-cols-3 gap-4">

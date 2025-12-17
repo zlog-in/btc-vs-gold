@@ -30,7 +30,7 @@ export default function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
           }`}
         >
           <span className="flex items-center gap-2">
-            <span className="text-xl">📊</span>
+            <span className="text-xl">📍</span>
             <span>Simple Mode</span>
           </span>
         </button>
