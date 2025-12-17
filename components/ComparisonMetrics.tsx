@@ -60,7 +60,7 @@ export default function ComparisonMetrics({ comparison }: ComparisonMetricsProps
 
       <div className="mt-4 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-xl p-3 border border-indigo-600/20">
         <p className="text-center text-sm text-gray-300">
-          💡 Bitcoin currently represents {comparison.btcAsPercentOfGold.toFixed(1)}% of gold's market cap
+          💡 Bitcoin currently represents {comparison.btcAsPercentOfGold.toFixed(1)}% of gold&apos;s market cap
         </p>
       </div>
     </div>
