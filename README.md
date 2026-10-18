@@ -27,8 +27,8 @@ Check out the live demo: [https://btc-vs-gold.vercel.app](https://btc-vs-gold.ve
 - **Charts**: Recharts
 - **APIs** (all free, no authentication required):
   - CoinGecko API (Bitcoin data)
-  - GoldAPI.io demo token (Gold price)
-  - GoldPrice.org (Gold price fallback)
+  - gold-api.com (Gold spot price)
+  - CoinGecko PAX Gold (Gold price fallback)
 
 ## Getting Started
 
@@ -78,7 +78,7 @@ Then edit `.env.local` if needed. But this is optional for local development.
 This project uses **completely free, public APIs** that don't require any authentication or signup:
 
 - **Bitcoin data**: CoinGecko API (free tier, no key needed)
-- **Gold price**: GoldAPI.io demo token + GoldPrice.org fallback (no signup needed)
+- **Gold price**: gold-api.com spot price + CoinGecko PAX Gold fallback (no signup needed)
 
 All APIs used are free and public, so you can start using the app immediately without any setup!
 
@@ -108,8 +108,8 @@ This approach:
 ```
 Gold Market Cap = Current Gold Price × Total Above-Ground Supply
                 = Price per Troy Ounce × 6.95 Billion Troy Ounces
-                ≈ $2,650 × 6,950,000,000
-                ≈ $18.4 Trillion
+                ≈ $4,150 × 6,950,000,000
+                ≈ $28.8 Trillion
 ```
 
 ## Project Structure
@@ -235,8 +235,7 @@ className="hover:scale-110 active:scale-95 transition-transform"
 | Service | Plan | Cost | Usage | Auth Required |
 |---------|------|------|-------|---------------|
 | CoinGecko API | Free | $0 | On-demand (manual refresh) | No |
-| GoldAPI.io | Demo | $0 | Unlimited | No (demo token) |
-| GoldPrice.org | Free | $0 | On-demand (manual refresh) | No |
+| gold-api.com | Free | $0 | On-demand (manual refresh) | No |
 | Vercel Hosting | Hobby | $0 | Unlimited | No |
 
 Note: API calls only happen when you click the refresh button, keeping usage minimal and well within free tier limits.

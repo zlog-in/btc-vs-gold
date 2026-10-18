@@ -124,51 +124,42 @@ export async function fetchBlockchainStats(): Promise<BlockchainStats> {
 }
 
 /**
- * Fetch gold price from free public API (no authentication required)
- * Uses GoldAPI.io free tier which doesn't require API key for basic requests
+ * Fetch gold spot price from free public APIs (no authentication required)
+ * Primary: gold-api.com spot XAU/USD
+ * Fallback: CoinGecko PAX Gold (each token is backed by 1 troy ounce of gold)
  * @returns Gold price per troy ounce
  */
 export async function fetchGoldData(): Promise<GoldData> {
   try {
-    // Try free gold price API (no auth required)
-    const response = await fetch(
-      "https://www.goldapi.io/api/XAU/USD",
-      {
-        headers: {
-          "x-access-token": "goldapi-demo", // Demo token, no signup needed
-        },
-      }
-    );
+    const response = await fetch("https://api.gold-api.com/price/XAU");
 
     if (response.ok) {
       const data = await response.json();
-      if (data.price) {
+      if (typeof data.price === "number" && data.price > 0) {
         return { price: data.price };
       }
     }
+  } catch (error) {
+    console.error("Error fetching gold data from gold-api.com:", error);
+  }
 
-    // Fallback: Try alternative free API
+  try {
     const fallbackResponse = await fetch(
-      "https://data-asg.goldprice.org/dbXRates/USD"
+      "https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd"
     );
 
     if (fallbackResponse.ok) {
       const fallbackData = await fallbackResponse.json();
-      // GoldPrice.org returns price per ounce in their items array
-      if (fallbackData.items && fallbackData.items.length > 0) {
-        const xauPrice = fallbackData.items[0].xauPrice;
-        if (xauPrice) {
-          return { price: parseFloat(xauPrice) };
-        }
+      const paxgPrice = fallbackData["pax-gold"]?.usd;
+      if (typeof paxgPrice === "number" && paxgPrice > 0) {
+        return { price: paxgPrice };
       }
     }
-
-    // If both APIs fail, use estimated current gold price
-    console.warn("Gold APIs unavailable, using estimated price");
-    return { price: 2650 };
   } catch (error) {
-    console.error("Error fetching gold data:", error);
-    // Return estimated gold price as fallback (~$2,650 per oz)
-    return { price: 2650 };
+    console.error("Error fetching gold data from CoinGecko:", error);
   }
+
+  // If both APIs fail, use estimated current gold price (~$4,150 per oz)
+  console.warn("Gold APIs unavailable, using estimated price");
+  return { price: 4150 };
 }
